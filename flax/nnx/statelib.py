@@ -510,16 +510,10 @@ def replace_by_pure_dict(
     replace_fn = lambda x, v: x.replace(v) if hasattr(x, 'replace') else v
   current_flat = dict(to_flat_state(state))
   for kp, v in traversals.flatten_mapping(pure_dict).items():
-    # Try exact match first, then integer conversion
-    if kp in current_flat:
-      matched_key = kp
-    else:
-      int_kp = tuple(map(try_convert_int, kp))
-      if int_kp in current_flat:
-        matched_key = int_kp
-      else:
-        raise ValueError(f'key in pure_dict not available in state: {kp}')
-    current_flat[matched_key] = replace_fn(current_flat[matched_key], v)
+    kp = tuple(map(try_convert_int, kp))
+    if kp not in current_flat:
+      raise ValueError(f'key in pure_dict not available in state: {kp}')
+    current_flat[kp] = replace_fn(current_flat[kp], v)
   state.update(traversals.unflatten_mapping(current_flat))
 
 

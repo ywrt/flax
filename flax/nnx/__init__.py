@@ -34,9 +34,15 @@ from . import pytreelib as object
 from .pytreelib import Pytree as Pytree
 from .pytreelib import Object as Object
 from .pytreelib import Data as Data
+from .pytreelib import Static as Static
 from .pytreelib import data as data
+from .pytreelib import static as static
 from .pytreelib import register_data_type as register_data_type
-from .pytreelib import is_data_type as is_data_type
+from .pytreelib import register_undefined_type as register_undefined_type
+from .pytreelib import is_data as is_data
+from .pytreelib import check_pytree as check_pytree
+from .helpers import Dict as Dict
+from .helpers import List as List
 from .helpers import Sequential as Sequential
 from .helpers import TrainState as TrainState
 from .module import M as M
@@ -207,7 +213,9 @@ if not _tp.TYPE_CHECKING:
           DeprecationWarning,
           stacklevel=2,
       )
-    if name not in globals():
+    if name.startswith("_"):
+      return KeyError
+    if name not in globals() :
       raise AttributeError(f"Module {__name__} has no attribute '{name}'")
 
     return globals()[name]

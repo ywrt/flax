@@ -9,5 +9,5 @@ object
 .. autofunction:: data
 .. autodata:: Data
    :annotation:
-.. autofunction:: is_data_type
+.. autofunction:: is_data
 .. autofunction:: register_data_type

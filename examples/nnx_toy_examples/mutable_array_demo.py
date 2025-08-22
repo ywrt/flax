@@ -140,7 +140,7 @@ class Model(nnx.Module):
 
       self.blocks = nnx.to_refs(create_block(rngs.fork(split=num_blocks)))
     else:
-      self.blocks = [Block(dhidden, dhidden, rngs=rngs) for i in range(num_blocks)]
+      self.blocks = nnx.List([Block(dhidden, dhidden, rngs=rngs) for i in range(num_blocks)])
 
   def __call__(self, x: jax.Array, *, rngs: nnx.Rngs | None = None):
     self.count[...] += 1
@@ -150,7 +150,7 @@ class Model(nnx.Module):
     # list or use jax.lax.scan to apply the blocks, if we
     # had shared state we would use split and merge to
     # pass the shared state as a capture
-    if isinstance(self.blocks, list):
+    if isinstance(self.blocks, nnx.List):
       for block in self.blocks:
         x = block(x, rngs=rngs)
     else:
